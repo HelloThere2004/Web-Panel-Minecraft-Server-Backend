@@ -57,5 +57,5 @@ jobs:
               -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
               -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
               -e AWS_REGION=ap-southeast-1 \
-              -e S3_BUCKET_NAME=gaming-map \
+              -e S3_BUCKET_NAME=gaming-map-hello-there \
               211125563303.dkr.ecr.ap-southeast-1.amazonaws.com/minecraft-server-backend:latest
