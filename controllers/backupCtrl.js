@@ -1,6 +1,7 @@
 const { S3Client } = require('@aws-sdk/client-s3');
 const { Upload } = require('@aws-sdk/lib-storage');
 const { ZipArchive } = require('archiver');
+const { PassThrough } = require('stream');
 const fs = require('fs');
 const path = require('path');
 
@@ -29,12 +30,16 @@ const runBackupToS3 = async (triggerBy = 'Manual') => {
     try {
         const archive = new ZipArchive({ zlib: { level: 9 } });
         
+        const pass = new PassThrough(); 
+        
+        archive.pipe(pass); 
+
         const upload = new Upload({
             client: s3Client,
             params: {
                 Bucket: process.env.S3_BUCKET_NAME, 
                 Key: s3Key,                         
-                Body: archive,
+                Body: pass, 
             },
         });
 
