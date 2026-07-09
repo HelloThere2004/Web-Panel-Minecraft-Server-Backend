@@ -1,0 +1,30 @@
+{
+  "name": "minecraft-server-backend",
+  "version": "1.0.0",
+  "description": "[Read in Vietnamese](#phần-tiếng-việt)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "build": "echo \"No build step required for Node.js\" && exit 0",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HelloThere2004/Web-Panel-Minecraft-Server-Backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/HelloThere2004/Web-Panel-Minecraft-Server-Backend/issues"
+  },
+  "homepage": "https://github.com/HelloThere2004/Web-Panel-Minecraft-Server-Backend#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "rcon-client": "^4.2.5"
+  }
+}
