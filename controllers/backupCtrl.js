@@ -1,6 +1,6 @@
 const { S3Client } = require('@aws-sdk/client-s3');
 const { Upload } = require('@aws-sdk/lib-storage');
-const archiver = require('archiver');
+const { ZipArchive } = require('archiver');
 const fs = require('fs');
 const path = require('path');
 
@@ -27,7 +27,7 @@ const runBackupToS3 = async (triggerBy = 'Manual') => {
     }
 
     try {
-        const archive = archiver('zip', { zlib: { level: 9 } });
+        const archive = new ZipArchive({ zlib: { level: 9 } });
         
         const upload = new Upload({
             client: s3Client,
