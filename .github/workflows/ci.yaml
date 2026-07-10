@@ -17,11 +17,11 @@ jobs:
     - name: 2. Cài đặt môi trường Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18.x' # Dùng Node 18 cho chuẩn môi trường
+        node-version: '20.x' # Nâng cấp lên Node 20 để chiều lòng AWS SDK
         cache: 'npm'         # Lưu cache lại để những lần test sau chạy nhanh hơn
 
     - name: 3. Cài đặt các gói thư viện (Dependencies)
-      run: npm ci
+      run: npm install
 
     - name: 4. Chạy Test Case chặn Bug
       run: npm test
