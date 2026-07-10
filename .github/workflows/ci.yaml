@@ -21,7 +21,7 @@ jobs:
         cache: 'npm'         # Lưu cache lại để những lần test sau chạy nhanh hơn
 
     - name: 3. Cài đặt các gói thư viện (Dependencies)
-      run: npm ci
+      run: npm install
 
     - name: 4. Chạy Test Case chặn Bug
       run: npm test
