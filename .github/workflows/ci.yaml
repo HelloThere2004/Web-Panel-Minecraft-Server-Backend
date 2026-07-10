@@ -1,0 +1,27 @@
+name: Node.js CI (Test & Check)
+
+# Báo cho GitHub biết: Chỉ chạy cái luồng này khi có ai đó tạo Pull Request 
+# đòi gộp code vào nhánh 'dev' hoặc nhánh 'main'.
+on:
+  pull_request:
+    branches: [ "main", "dev" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # Cấp một cái máy ảo Ubuntu tạm thời trên GitHub
+
+    steps:
+    - name: 1. Lấy code mới nhất về máy ảo
+      uses: actions/checkout@v4
+
+    - name: 2. Cài đặt môi trường Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x' # Dùng Node 18 cho chuẩn môi trường
+        cache: 'npm'         # Lưu cache lại để những lần test sau chạy nhanh hơn
+
+    - name: 3. Cài đặt các gói thư viện (Dependencies)
+      run: npm ci
+
+    - name: 4. Chạy Test Case chặn Bug
+      run: npm test

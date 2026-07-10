@@ -17,7 +17,7 @@ const runBackupToS3 = async (triggerBy = 'Manual') => {
     
     // Đặt tên Key chuẩn với cấu trúc của ông
     // Kết quả sẽ ra: minecraft/backup_2026-07-09_22-15-30/world.zip
-    const s3Key = `minecraft/backup_${timestamp}/world.zip`;
+    const s3Key = `minecraft/backups/backup_${timestamp}/world.zip`;
     
     const worldPath = path.join(process.env.MC_SERVER_PATH, 'world');
 
