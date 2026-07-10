@@ -9,8 +9,8 @@ const { Rcon } = require('rcon-client');
 let crashCounter = 0;
 
 // Middleware
-app.use(cors()); // Cho phép Front-end gọi API
-app.use(express.json()); // Để đọc được body kiểu JSON
+app.use(cors()); 
+app.use(express.json()); 
 
 // Import Routes
 const serverRoutes = require('./routes/server');
@@ -27,10 +27,10 @@ setInterval(async () => {
             host: process.env.RCON_HOST,
             port: process.env.RCON_PORT,
             password: process.env.RCON_PASS,
-            timeout: 5000 // Chờ 5s thôi, không phản hồi là tính rớt
+            timeout: 5000 
         });
         await rcon.end();
-        crashCounter = 0; // Ping ngon thì reset bộ đếm
+        crashCounter = 0; 
     } catch (error) {
         crashCounter++;
         console.log(`[Health Check] Server không phản hồi lần ${crashCounter}...`);
@@ -38,16 +38,25 @@ setInterval(async () => {
         if (crashCounter === 3) {
             console.log('🚨 Phát hiện Server Crash! Kích hoạt Auto-Backup khẩn cấp!');
             runBackupToS3('Server Crash Recovery');
-            crashCounter = -9999; // Set âm để nó không bị spam back-up liên tục lúc server đang chết
+            crashCounter = -9999; 
         }
     }
-}, 60000); // 60 giây check 1 lần
+}, 60000); 
 
 // Route Test xem server sống chưa
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK', message: 'Back-end Panel đang chạy ngon lành!' });
 });
 
-app.listen(PORT, () => {
-    console.log(`🚀 Web Panel Back-end đang chạy tại cổng ${PORT}`);
-});
+// ==========================================
+// CẬP NHẬT CHO CI/CD TEST
+// ==========================================
+// Chỉ chạy server lắng nghe port nếu KHÔNG PHẢI đang trong môi trường test
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(PORT, () => {
+        console.log(`🚀 Web Panel Back-end đang chạy tại cổng ${PORT}`);
+    });
+}
+
+// Bắt buộc phải export app ra để thư viện supertest nó nạp vào bộ nhớ ảo
+module.exports = app;
