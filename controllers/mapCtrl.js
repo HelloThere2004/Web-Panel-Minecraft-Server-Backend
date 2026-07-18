@@ -1,4 +1,4 @@
-const { PutObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client,PutObjectCommand } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const { exec } = require('child_process');
 const fs = require('fs');
