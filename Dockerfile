@@ -4,7 +4,7 @@ FROM node:24-alpine
 WORKDIR /app
 
 COPY package*.json ./
-
+RUN apk add --no-cache unzip
 RUN npm install --omit=dev
 
 COPY . .

@@ -1,4 +1,5 @@
-const { S3Client,PutObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const { pipeline } = require('stream/promises'); 
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const { exec } = require('child_process');
 const fs = require('fs');
@@ -83,18 +84,34 @@ const deployMapFromS3 = async (req, res) => {
             fs.rmSync(worldPath, { recursive: true, force: true });
         }
 
-        // 2. Kéo file map khủng từ S3 về con Oracle Cloud qua AWS CLI tốc độ cao
-        console.log(`[Map] Đang kéo file từ S3 về local: ${s3Key}`);
-        await execPromise(`aws s3 cp s3://${process.env.S3_BUCKET_NAME}/${s3Key} ${localZipPath}`);
+        // 2. Kéo file map từ S3 về bằng AWS SDK (Không dùng aws cli nữa!)
+        console.log(`[Map] Đang kéo file từ S3 về local qua AWS SDK: ${s3Key}`);
+        const getCommand = new GetObjectCommand({
+            Bucket: process.env.S3_BUCKET_NAME || 'gaming-map',
+            Key: s3Key
+        });
+        const { Body } = await s3Client.send(getCommand);
+        
+        // Ghi stream từ S3 vào file localZipPath
+        await pipeline(Body, fs.createWriteStream(localZipPath));
+        console.log('[Map] Đã tải xong file zip từ S3 về máy!');
 
         // 3. Bung nén bằng lệnh hệ điều hành Ubuntu ARM
         console.log('[Map] Đang bung nén map mới...');
         await execPromise(`unzip -o ${localZipPath} -d ${serverPath}`);
         
-        // 4. Dọn dẹp file zip tạm ở local và xóa luôn file tạm trên S3 để tránh rác
-        fs.unlinkSync(localZipPath);
+        // 4. Dọn dẹp file zip tạm ở local và xóa luôn file trên S3
+        if (fs.existsSync(localZipPath)) {
+            fs.unlinkSync(localZipPath);
+        }
+        
         try {
-            await execPromise(`aws s3 rm s3://${process.env.S3_BUCKET_NAME}/${s3Key}`);
+            console.log('[Map] Đang xoá file tạm trên S3...');
+            const deleteCommand = new DeleteObjectCommand({
+                Bucket: process.env.S3_BUCKET_NAME || 'gaming-map',
+                Key: s3Key
+            });
+            await s3Client.send(deleteCommand);
             console.log('[Map] Đã dọn dẹp file upload tạm trên S3.');
         } catch (s3Err) {
             console.log('[Map] Cảnh báo: Không thể xoá file tạm trên S3, quy trình deploy vẫn tiếp tục.', s3Err);
