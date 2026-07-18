@@ -7,8 +7,8 @@ const util = require('util');
 const execPromise = util.promisify(exec);
 
 // Tái sử dụng s3Client từ file backupCtrl của ông
-const { s3Client, runBackupToS3 } = require('./backupCtrl'); 
-
+const { runBackupToS3 } = require('./backupCtrl'); 
+const s3Client = new S3Client({ region: process.env.AWS_REGION || 'ap-southeast-1' });
 const serverPath = process.env.MC_SERVER_PATH || '/home/ubuntu/minecraft';
 
 // Hàm helper tắt/bật server
