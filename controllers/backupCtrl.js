@@ -61,7 +61,7 @@ const manualBackup = async (req, res) => {
     await runBackupToS3('API Manual');
 };
 
-module.exports = {
+module.exports = { 
     runBackupToS3,
     manualBackup
 };
