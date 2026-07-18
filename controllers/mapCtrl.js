@@ -34,9 +34,13 @@ const getUploadUrl = async (req, res) => {
     try {
         const timestamp = Date.now();
         const s3Key = `minecraft/uploads/world_${timestamp}.zip`;
+        const bucketName = process.env.S3_BUCKET_NAME || 'gaming-map';
 
+        if (!bucketName) {
+            throw new Error('Tên S3 Bucket chưa được xác định!');
+        }
         const command = new PutObjectCommand({
-            Bucket: process.env.S3_BUCKET_NAME,
+            Bucket: bucketName,
             Key: s3Key,
             ContentType: 'application/zip'
         });
