@@ -61,7 +61,7 @@ const getUploadUrl = async (req, res) => {
 };
 
 // ==========================================
-// TÍNH NĂNG 1B: KÍCH HOẠT DEPLOY (Sau khi Front-end đã up xong lên S3)
+// TÍNH NĂNG 1B: KÍCH HOẠT DEPLOY (Dùng AWS SDK thay vì AWS CLI)
 // ==========================================
 const deployMapFromS3 = async (req, res) => {
     const { s3Key } = req.body; 
